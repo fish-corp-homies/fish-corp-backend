@@ -1,10 +1,11 @@
 package com.example.fish_corp_backend.controller;
 
+import com.example.fish_corp_backend.service.KartverketService;
+import com.example.fish_corp_backend.service.MapperService;
 import com.example.fish_corp_backend.service.VanntempService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -12,10 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class FishCorpController {
 
     @Autowired
+    MapperService mapperService;
+
+    @Autowired
     VanntempService vanntempService;
 
+    @Autowired
+    KartverketService kartverketService;
+
     @GetMapping(value = "/hello")
-    public String sayHello() {
-        return vanntempService.getVanntemp("65.4691", "12.2042");
+    public com.example.fish_corp_backend.model.TideForecast sayHello() {
+//        var oceanForecast =  mapperService.mapOceanForecastFromDto(vanntempService.getOceanForecast("65.4691", "12.2042"));
+
+        var tideForecast = mapperService.mapTideForecastFromDto(kartverketService.getTideForecast("65.4691", "12.2042"));
+
+        return tideForecast;
     }
 }

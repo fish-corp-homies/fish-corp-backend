@@ -5,6 +5,8 @@ spring:
 api:
   metno:
     base-url: https://api.met.no
+  kartverket:
+    base-url: https://kartverket.no
 
 logging:
   level:
