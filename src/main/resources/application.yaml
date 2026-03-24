@@ -1,3 +1,13 @@
 spring:
   application:
     name: fish-corp-backend
+
+api:
+  metno:
+    base-url: https://api.met.no
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
