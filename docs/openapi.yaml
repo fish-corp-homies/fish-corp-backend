@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Fish Corp Backend API
+  description: API for fetching tide and ocean temperature forecasts for fish farming operations.
+  version: 0.0.1-SNAPSHOT
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+paths:
+  /api/tidevann:
+    get:
+      summary: Get tide forecast
+      description: Returns tide forecast data for coordinates 65.4691°N, 12.2042°E using Kartverket's tide service.
+      operationId: getTidevann
+      responses:
+        '200':
+          description: Tide forecast with a list of high/low tide events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TideForecast'
+              example:
+                forecastList:
+                  - status: high
+                    timestamp: "2025-06-01T06:32:00Z"
+                    measurement:
+                      value: 142.5
+                      unit: cm
+                  - status: low
+                    timestamp: "2025-06-01T12:48:00Z"
+                    measurement:
+                      value: 18.3
+                      unit: cm
+
+  /api/oceanforecast:
+    get:
+      summary: Get ocean temperature forecast
+      description: Returns water temperature forecast for coordinates 65.4691°N, 12.2042°E using the MET.no ocean forecast API.
+      operationId: getOceanForecast
+      responses:
+        '200':
+          description: Water temperature forecast at the given coordinates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WaterTempForecast'
+              example:
+                timestamp: "2025-06-01T06:00:00Z"
+                temperatureCelsius: 9.4
+
+components:
+  schemas:
+    TideForecast:
+      type: object
+      properties:
+        forecastList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Forecast'
+
+    Forecast:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Whether this is a high or low tide
+          example: high
+        timestamp:
+          type: string
+          format: date-time
+          description: Time of the tide event (ISO 8601)
+          example: "2025-06-01T06:32:00Z"
+        measurement:
+          $ref: '#/components/schemas/Measurement'
+
+    Measurement:
+      type: object
+      properties:
+        value:
+          type: number
+          description: Water height in cm
+          example: 142.5
+        unit:
+          type: string
+          description: Unit of measurement
+          example: cm
+
+    WaterTempForecast:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Forecast timestamp (ISO 8601)
+          example: "2025-06-01T06:00:00Z"
+        temperatureCelsius:
+          type: number
+          description: Water temperature in degrees Celsius
+          example: 9.4
